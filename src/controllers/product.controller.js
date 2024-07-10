@@ -1,23 +1,22 @@
-import path from 'path';
 import ProductModel from '../models/product.model.js';
 
-export default class ProductController {
-    getProducts(req, res) {
-        let products = ProductModel.get();
-        console.log(products);
-        res.render('index', { products });
-    }
+class ProductsController {
+  getProducts(req, res, next) {
+    var products = ProductModel.getAll();
+    res.render('index', { products });
+  }
 
-    getAddForm(req,res){
-        return res.render('new-product')
-    }
+  getAddProduct(req, res, next) {
+    res.render('new-product', {
+      errorMessage: null,
+    });
+  }
 
-    addnewProduct(req,res){
-        // access data from form.
-        console.log(req.body); // undefined
-        ProductModel.add(req.body);
-        let products = ProductModel.get();
-        return res.render('products', {products});
-    }
+  postAddProduct(req, res, next) {
+    ProductModel.add(req.body);
+    var products = ProductModel.getAll();
+    res.render('index', { products });
+  }
 }
 
+export default ProductsController;

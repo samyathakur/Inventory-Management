@@ -1,27 +1,27 @@
 import express from 'express';
-import ProductController from './src/controller/product.controller.js';
-import path from 'path';
+import ProductsController from './src/controllers/product.controller.js';
 import ejsLayouts from 'express-ejs-layouts';
+import path from 'path';
+import validateRequest from './src/middlewares/validation.middleware.js';
 
-const server = express();
+const app = express();
+const productsController =
+  new ProductsController();
 
-//Parse form data
-server.use(express.urlencoded({extended: true}));
+app.use(ejsLayouts);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// setup view engine settings, it tells that the type of view engine we use is ejs
-server.set('view engine', 'ejs');
-// define the path of view/where ejs will find the views
-server.set('views', path.join(path.resolve(),"src",'view'));
+app.set('view engine', 'ejs');
+app.set('views',path.join(path.resolve(), 'src', 'views'));
 
-server.use(ejsLayouts);
+app.get('/', productsController.getProducts);
+app.get(
+  '/add-product',
+  productsController.getAddProduct
+);
+app.post('/', validateRequest, productsController.postAddProduct);
 
-// create an instance of ProductController
-const productController = new ProductController(); 
-server.get('/', (productController.getProducts));
-
-server.get('/new',(productController.getAddForm))
-server.post('/', productController.addNewProduct);
-server.use(express.static('src/view'));
-
-server.listen(3400);
-console.log('Server is listening on pert 3400')
+app.listen(3100, () => {
+  console.log('Server is running on port 3100');
+});
