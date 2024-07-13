@@ -36,6 +36,7 @@ const validateRequest = async (req, res, next) => {
          errorMessage: validationErrors.array()[0].msg,
        });
      }
+next();
 }
 
 export default validateRequest
