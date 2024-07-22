@@ -3,6 +3,7 @@ import ProductsController from './src/controllers/product.controller.js';
 import ejsLayouts from 'express-ejs-layouts';
 import path from 'path';
 import validateRequest from './src/middlewares/validation.middleware.js';
+import { uploadFile } from './src/middlewares/file-upload-middleware.js';
 
 const app = express();
 // it will make public folder directly accessible to view folder
@@ -34,7 +35,7 @@ app.post(
   productsController.deleteProduct
 );
 
-app.post('/', validateRequest, productsController.postAddProduct);
+app.post('/', uploadFile.single('imageUrl') , validateRequest, productsController.postAddProduct);
 
 app.post('/update-product', productsController.postUpdateProduct);
 
